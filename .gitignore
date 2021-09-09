@@ -1,4 +1,4 @@
-Project2/
+#Project2/
 
 # Created by https://www.toptal.com/developers/gitignore/api/pycharm,visualstudiocode,python,virtualenv,venv
 # Edit at https://www.toptal.com/developers/gitignore?templates=pycharm,visualstudiocode,python,virtualenv,venv
@@ -283,3 +283,4 @@ pip-selfcheck.json
 
 # End of https://www.toptal.com/developers/gitignore/api/pycharm,visualstudiocode,python,virtualenv,venv
 
+.idea
