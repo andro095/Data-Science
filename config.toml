@@ -1,0 +1,12 @@
+[theme]
+# Primary accent color for interacive elements.
+primaryColor = "#E694FF"
+
+# Background color for the main content area.
+backgroundColor = "#0F3B40"
+
+# Color used for almost all text
+textColor = "#FFFFFF"
+
+# Font family
+font = "sans serif"
