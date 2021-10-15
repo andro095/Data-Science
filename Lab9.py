@@ -33,7 +33,7 @@ def SetPageConfiguration():
     st.markdown(st_style,unsafe_allow_html=True)
 
 def SetHeader():
-    st.markdown("<h1 style='text-align: center; color: white; font-size: 100px;'>Text Prediction Dashboard</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center; color: white; font-size: 100px;'>Text Prediction</h1>", unsafe_allow_html=True)
 
 def ShowBarGraph(df,x_label,graph_title):
     bar_graph = px.bar(
