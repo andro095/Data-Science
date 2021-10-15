@@ -85,9 +85,9 @@ if __name__ == "__main__":
     left_col,right_col = st.columns(2)
     # Graficas de barras
     with left_col: 
-        ShowBarGraph(bigramDF,"Bigrams","Most Common Bigrams")
+        ShowBarGraph(bigramDF,"Bigram","Most Common Bigrams")
     with right_col: 
-        ShowBarGraph(trigramDF,"Trigrams","Most Common Trigrams")
+        ShowBarGraph(trigramDF,"Trigram","Most Common Trigrams")
     # Grafica de pie
     st.markdown("##")
     l_col,center_col,r_col = st.columns(3)
