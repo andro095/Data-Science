@@ -33,8 +33,7 @@ def SetPageConfiguration():
     st.markdown(st_style,unsafe_allow_html=True)
 
 def SetHeader():
-    st.title("Text Prediction Dashboard")
-    st.markdown("##")
+    st.markdown("<h1 style='text-align: center; color: white; font-size: 100px;'>Text Prediction Dashboard</h1>", unsafe_allow_html=True)
 
 def ShowBarGraph(df,x_label,graph_title):
     bar_graph = px.bar(
@@ -50,8 +49,15 @@ def ShowBarGraph(df,x_label,graph_title):
         font_color="white",
         title={'text':"<b>"+graph_title+"</b>",
                'x':0.5,
-               'xanchor':'center'}
+               'xanchor':'center'},
+        font_size=20
     )
+    
+    bar_graph.update_layout({
+        'plot_bgcolor': 'rgba(0, 0, 0, 0)',
+        'paper_bgcolor': 'rgba(0, 0, 0, 0)',
+        })
+    
     st.plotly_chart(bar_graph)
 
 def ShowPieGraph(df,graph_title):
@@ -66,7 +72,8 @@ def ShowPieGraph(df,graph_title):
     pie_graph.update_layout(
         title={'text':"<b>"+graph_title+"</b>",
                'x':0.5,
-               'xanchor':'center'}
+               'xanchor':'center'},
+        font_size=24
     )
     st.plotly_chart(pie_graph)
 
