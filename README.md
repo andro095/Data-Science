@@ -32,6 +32,6 @@ pip install -r requierements.txt
 ```
 
 Para abrir el Dashboard Interactivo:
-````
+```
 streamlit run Lab9.py
 ```
