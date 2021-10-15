@@ -33,7 +33,7 @@ def SetPageConfiguration():
     st.markdown(st_style,unsafe_allow_html=True)
 
 def SetHeader():
-    st.markdown("<h1 style='text-align: center; color: white; font-size: 100px;'>Text Prediction</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center; color: white; font-size: 100px;'>Text Prediction Dashboard</h1>", unsafe_allow_html=True)
 
 def ShowBarGraph(df,x_label,graph_title):
     bar_graph = px.bar(
@@ -85,9 +85,9 @@ if __name__ == "__main__":
     left_col,right_col = st.columns(2)
     # Graficas de barras
     with left_col: 
-        ShowBarGraph(bigramDF,"Bigram","Most Common Bigrams")
+        ShowBarGraph(bigramDF,"Bigrams","Most Common Bigrams")
     with right_col: 
-        ShowBarGraph(trigramDF,"Trigram","Most Common Trigrams")
+        ShowBarGraph(trigramDF,"Trigrams","Most Common Trigrams")
     # Grafica de pie
     st.markdown("##")
     l_col,center_col,r_col = st.columns(3)
