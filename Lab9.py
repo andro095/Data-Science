@@ -34,6 +34,7 @@ def SetPageConfiguration():
 
 def SetHeader():
     st.markdown("<h1 style='text-align: center; color: white; font-size: 100px;'>Text Prediction Dashboard</h1>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center; color: white; font-size: 25px;'>En las graficas de barras, dejar presionado el click derecho para seleccionar y ampliar un area de datos.</p>", unsafe_allow_html=True)
 
 def ShowBarGraph(df,x_label,graph_title):
     bar_graph = px.bar(
