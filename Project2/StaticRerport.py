@@ -49,7 +49,12 @@ def CreateDataFrames():
                 'Percentage':[63.1,30.7,6.2]}
     pie_df_nb = pd.DataFrame(data=pie_data_nb).sort_values(by="Percentage",ascending=False)
 
-    return country_df,word_df,test_df,test_df_nb,pie_df,pie_df_nb
+    # tweets de desastres
+    count_tweets = {'Frequency':[3271,4342],
+                     'Target Tweets':['Disaster tweet','Normal tweet']}
+    count_tw = pd.DataFrame(data=count_tweets).sort_values(by="Target Tweets",ascending=False)
+
+    return country_df,word_df,test_df,test_df_nb,pie_df,pie_df_nb,count_tw
 
 def SetPageConfiguration():
     st.set_page_config(page_title="Text Prediction",
@@ -76,6 +81,31 @@ def ShowBarGraph(df,x_label,graph_title):
         color="Frequency",
         color_continuous_scale=["#1446C4","#00C18C","#2E8EC2"],
         height=500,
+    )
+    bar_graph.update_layout(
+        font_color="white",
+        title={'text':"<b>"+graph_title+"</b>",
+               'x':0.5,
+               'xanchor':'center'},
+        font_size=20
+    )
+    
+    bar_graph.update_layout({
+        'plot_bgcolor': '#ABABAB',
+        'paper_bgcolor': '#ABABAB',
+        })
+    
+    st.plotly_chart(bar_graph)
+
+def ShowHorizontalBarGraph(df,x_label,graph_title):
+    bar_graph = px.bar(
+        df,
+        y=x_label,
+        x="Frequency",
+        orientation="h",
+        color="Frequency",
+        color_continuous_scale=["#1446C4","#00C18C","#2E8EC2"],
+        height=350,
     )
     bar_graph.update_layout(
         font_color="white",
@@ -151,11 +181,12 @@ if __name__ == "__main__":
         st.pyplot(fig)
 
 
-    countryDF,wordDF,testDF,testDFnb,pieDF,pieDFnb = CreateDataFrames()
+    countryDF,wordDF,testDF,testDFnb,pieDF,pieDFnb,countTW = CreateDataFrames()
     
     salt()
     title("Disaster tweets statistics",40,'gray')
-    salt()
+    salt() 
+    ShowHorizontalBarGraph(countTW,"Target Tweets","Target Tweets")
     ShowBarGraph(countryDF,"Country","Country with most disaster tweets")
     
     ShowBarGraph(wordDF,"Word","Most common words in keywords")
