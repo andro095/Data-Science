@@ -20,21 +20,26 @@ class slide_bar:
         slide_bar.value=self.slide_bar
 
 def CreateDataFrames():
-    # Bigramas y sus respectivas frecuencias
+    # frecuencias de paises con mas tweets
     country_data = {'Country':['USA','Washington DC','Nigeria','India','WorldWide','Mumbai','UK','New York', 'Cánada'],
                    'Frequency':[100,32,28,24,23,21,20,19,19]}
     country_df = pd.DataFrame(data=country_data).sort_values(by="Frequency",ascending=False)
-    # Trigramas y sus respectivas frecuencias
+    # frecuencias de palabras que más aparecen en el texto de tweets de desastres
     word_data = {'Word':['suicide bombing','wreckage','derailment','typhoon','oil spill',
                                'outbreak','debris','rescuers'],
                      'Frequency':[64,39,37,37,36,32,32,32]}
     word_df = pd.DataFrame(data=word_data).sort_values(by="Frequency",ascending=False)
+    # resultados de con los datos de pruebas
+    test_data = {'Test Data':['True','False'],
+                     'Frequency':[1515,449]}
+    test_df = pd.DataFrame(data=test_data).sort_values(by="Frequency",ascending=False)
+
     # Datos modelo de prediccion
     pie_data = {'Case':['Succesful','Failed','No Answer'],
                 'Percentage':[56.7,33.3,10.0]}
     pie_df = pd.DataFrame(data=pie_data).sort_values(by="Percentage",ascending=False)
 
-    return country_df,word_df,pie_df
+    return country_df,word_df,test_df,pie_df
 
 def SetPageConfiguration():
     st.set_page_config(page_title="Text Prediction",
@@ -140,22 +145,25 @@ if __name__ == "__main__":
         st.pyplot(fig)
 
 
-    countryDF,wordDF,pieDF = CreateDataFrames()
+    countryDF,wordDF,testDF,pieDF = CreateDataFrames()
     #SetPageConfiguration()
     # left_col,right_col = st.columns(2)
     # # Graficas de barras
     # with left_col: 
     salt()
-
     title("Disaster tweets statistics",40,'gray')
     salt()
     ShowBarGraph(countryDF,"Country","Country with most disaster tweets")
     #with right_col: 
     ShowBarGraph(wordDF,"Word","Most common words in keywords")
     # Grafica de pie
-    
-    title("Model results",40,'gray')
+    salt()
+    title("Bert Classifier Model results",40,'gray')
+    salt()
+    ShowBarGraph(testDF,"Test Data","Bert Classifier prediction using test data")
     # l_col,center_col,r_col = st.columns([0.5,5,0.5])
     # with center_col:
     ShowPieGraph(pieDF,"Model Success")
+
+    
     
