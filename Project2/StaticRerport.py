@@ -50,7 +50,7 @@ def CreateDataFrames():
     pie_df_nb = pd.DataFrame(data=pie_data_nb).sort_values(by="Percentage",ascending=False)
 
     # tweets de desastres
-    count_tweets = {'Frequency':[3271,4342],
+    count_tweets = {'Count':[3271,4342],
                      'Target Tweets':['Disaster tweet','Normal tweet']}
     count_tw = pd.DataFrame(data=count_tweets).sort_values(by="Target Tweets",ascending=False)
 
@@ -101,9 +101,9 @@ def ShowHorizontalBarGraph(df,x_label,graph_title):
     bar_graph = px.bar(
         df,
         y=x_label,
-        x="Frequency",
+        x="Count",
         orientation="h",
-        color="Frequency",
+        color="Count",
         color_continuous_scale=["#1446C4","#00C18C","#2E8EC2"],
         height=350,
     )
