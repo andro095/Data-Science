@@ -29,17 +29,27 @@ def CreateDataFrames():
                                'outbreak','debris','rescuers'],
                      'Frequency':[64,39,37,37,36,32,32,32]}
     word_df = pd.DataFrame(data=word_data).sort_values(by="Frequency",ascending=False)
-    # resultados de con los datos de pruebas
-    test_data = {'Test Data':['True','False'],
+    # resultados de con los datos de pruebas bert classifier
+    test_data = {'Test Data':['predicted truth','predicted false'],
                      'Frequency':[1515,449]}
     test_df = pd.DataFrame(data=test_data).sort_values(by="Frequency",ascending=False)
 
-    # Datos modelo de prediccion
+    # resultados de con los datos de pruebas Naive Bayes
+    test_data_nb = {'Test Data':['predicted truth','predicted false'],
+                     'Frequency':[1568,396]}
+    test_df_nb = pd.DataFrame(data=test_data_nb).sort_values(by="Frequency",ascending=False)
+
+    # Datos modelo de prediccion bert classifier
     pie_data = {'Case':['Succesful','Failed','No Answer'],
-                'Percentage':[56.7,33.3,10.0]}
+                'Percentage':[61.7,32.3,6.0]}
     pie_df = pd.DataFrame(data=pie_data).sort_values(by="Percentage",ascending=False)
 
-    return country_df,word_df,test_df,pie_df
+    # Datos modelo de prediccion naive bayes
+    pie_data_nb = {'Case':['Succesful','Failed','No Answer'],
+                'Percentage':[63.1,30.7,6.2]}
+    pie_df_nb = pd.DataFrame(data=pie_data_nb).sort_values(by="Percentage",ascending=False)
+
+    return country_df,word_df,test_df,test_df_nb,pie_df,pie_df_nb
 
 def SetPageConfiguration():
     st.set_page_config(page_title="Text Prediction",
@@ -129,10 +139,6 @@ if __name__ == "__main__":
     l_col,center_col,r_col = st.columns([0.5,5,0.5])
     
     with center_col:
-        #header('range')
-        # sl = slide_bar('',50,200)
-        # sl.set()
-        # st.markdown('Refresh data take a few seconds to load the result, so please hold...')
         @st.cache(persist=True,suppress_st_warning=True)
         def swc(df, l):
             return generate_word_cloud(df, l)
@@ -145,25 +151,27 @@ if __name__ == "__main__":
         st.pyplot(fig)
 
 
-    countryDF,wordDF,testDF,pieDF = CreateDataFrames()
-    #SetPageConfiguration()
-    # left_col,right_col = st.columns(2)
-    # # Graficas de barras
-    # with left_col: 
+    countryDF,wordDF,testDF,testDFnb,pieDF,pieDFnb = CreateDataFrames()
+    
     salt()
     title("Disaster tweets statistics",40,'gray')
     salt()
     ShowBarGraph(countryDF,"Country","Country with most disaster tweets")
-    #with right_col: 
+    
     ShowBarGraph(wordDF,"Word","Most common words in keywords")
     # Grafica de pie
     salt()
     title("Bert Classifier Model results",40,'gray')
     salt()
     ShowBarGraph(testDF,"Test Data","Bert Classifier prediction using test data")
-    # l_col,center_col,r_col = st.columns([0.5,5,0.5])
+    
     # with center_col:
     ShowPieGraph(pieDF,"Model Success")
-
     
+    title("Naive Bayes Model results",40,'gray')
+    salt()
+
+    ShowBarGraph(testDFnb,"Test Data","Naive Bayes prediction using test data")
+    
+    ShowPieGraph(pieDFnb,"Model Success")
     
