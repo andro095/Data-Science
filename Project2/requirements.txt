@@ -1,0 +1,12 @@
+pandas
+streamlit
+plotly
+PIL
+wordcloud
+numpy
+matplotlib
+re
+seaborn
+sklearn
+tensorflow
+tensorflow_hub
