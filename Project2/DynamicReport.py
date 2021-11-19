@@ -257,6 +257,9 @@ if __name__ == "__main__":
     l_col,center_col,r_col = st.columns([0.5,5,0.5])
     
     with center_col:
+        sl = slide_bar('',50,200)
+        sl.set()
+        st.markdown('Tomará unos segundos refrescar la nube de palabras')
         @st.cache(persist=True,suppress_st_warning=True)
         def swc(df, l):
             return generate_word_cloud(df, l)
