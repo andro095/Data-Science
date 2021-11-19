@@ -8,5 +8,3 @@ matplotlib
 re
 seaborn
 sklearn
-tensorflow
-tensorflow_hub
