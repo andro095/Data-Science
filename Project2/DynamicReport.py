@@ -1,10 +1,80 @@
 import pandas as pd
 import streamlit as st
 import plotly.express as px
+import re
 from PIL import Image,ImageOps
 from wordcloud import WordCloud,STOPWORDS
 import numpy as np
 import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.pipeline import make_pipeline
+from sklearn.metrics import confusion_matrix
+
+class Classifier():
+    def __init__(self):
+        self.ReadData()
+        self.TrainModel()
+
+    def ReadData(self):
+        self.data = pd.read_csv("cleanned_data.csv")
+        self.df_non_emergency = self.data[self.data['target']==0]
+        self.df_emergency = self.data[self.data['target']==1]
+        self.non_emergency_X, = self.df_non_emergency.text.sample(3271).fillna(' '),
+        self.non_emergency_Y = self.df_non_emergency.target.sample(3271).fillna(int(0))
+        self.emergency_X = self.df_emergency.text.fillna(' ')
+        self.emergency_Y = self.df_emergency.target.fillna(int(0))
+        print("\nData Read succesfully...")
+
+
+    def TrainModel(self):
+        non_emergency_X = self.non_emergency_X.to_numpy()
+        emergency_X = self.emergency_X.to_numpy()
+        non_emergency_Y = self.non_emergency_Y.to_numpy()
+        emergency_Y = self.emergency_Y.to_numpy()
+        # Separacion de conjunto de entrenamiento y prueba
+        self.X_train = np.concatenate((non_emergency_X[:int(len(non_emergency_X)*0.8)],
+                                       emergency_X[:int(len(emergency_X)*0.8)]))
+        self.X_test = np.concatenate((non_emergency_X[int(len(non_emergency_X)*0.7):],
+                                      emergency_X[int(len(emergency_X)*0.7):]))
+        self.Y_train = np.concatenate((non_emergency_Y[:int(len(non_emergency_Y)*0.8)],
+                                       emergency_Y[:int(len(emergency_Y)*0.8)]))
+        self.Y_test = np.concatenate((non_emergency_Y[int(len(non_emergency_Y)*0.7):],
+                                      emergency_Y[int(len(emergency_Y)*0.7):]))
+        print("\nData prepared")
+
+        self.vectorizer = CountVectorizer(min_df=1)
+
+        self.forest_model = RandomForestClassifier()
+        self.forest_model.fit(self.vectorizer.fit_transform(self.X_train).toarray(), self.Y_train)
+
+        print("\nForest Model trained succesfully...")
+
+        self.bayes_model = make_pipeline(TfidfVectorizer(binary=True),MultinomialNB())
+        self.bayes_model.fit(self.X_train,self.Y_train)
+
+        print("\nBayes Model trained succesfully...")
+
+    def GetBayesModelHeatMap(self):
+        labels =self.bayes_model.predict(self.X_test)
+        mat = confusion_matrix(self.Y_test,labels)
+        sns.heatmap(mat.T)
+
+    def GetForestModelHeatMap(self):
+        labels =self.forest_model.predict(self.vectorizer.transform(self.X_test).toarray())
+        mat = confusion_matrix(self.Y_test,labels)
+        sns.heatmap(mat.T)
+
+    def BayesPredictCategory(self,s):
+        pred = self.bayes_model.predict([s])
+        return "Disaster Tweet" if pred[0] == 1 else "Non Disaster Tweet"
+
+    def ForestPredictCategory(self,s):
+        pred = self.forest_model.predict(self.vectorizer.transform([s]).toarray())
+        return "Disaster Tweet" if pred[0] == 1 else "Non Disaster Tweet"
+
 
 class slide_bar:
     value=4
@@ -29,7 +99,7 @@ def CreateDataFrames():
                                'outbreak','debris','rescuers'],
                      'Frequency':[64,39,37,37,36,32,32,32]}
     word_df = pd.DataFrame(data=word_data).sort_values(by="Frequency",ascending=False)
-    # resultados de con los datos de pruebas bert classifier
+    # resultados de con los datos de pruebas Random Forest classifier
     test_data = {'Test Data':['predicted truth','predicted false'],
                      'Frequency':[1515,449]}
     test_df = pd.DataFrame(data=test_data).sort_values(by="Frequency",ascending=False)
@@ -39,7 +109,7 @@ def CreateDataFrames():
                      'Frequency':[1568,396]}
     test_df_nb = pd.DataFrame(data=test_data_nb).sort_values(by="Frequency",ascending=False)
 
-    # Datos modelo de prediccion bert classifier
+    # Datos modelo de prediccion Random classifier
     pie_data = {'Case':['Succesful','Failed','No Answer'],
                 'Percentage':[61.7,32.3,6.0]}
     pie_df = pd.DataFrame(data=pie_data).sort_values(by="Percentage",ascending=False)
@@ -155,7 +225,24 @@ def header(text):
 def salt():
     st.markdown(f"<br><br>",unsafe_allow_html=True)
 
+def test_function(text):
+    return text
+
+def modelInput(function,model_name):
+    title('Predict with {} model'.format(model_name),20,'#1446C4')
+    tweet = st.text_input(f"Enter a tweet", key=model_name)
+    result = st.button(f"Predict", key=model_name)
+    prediction = ""
+
+    if result:
+        prediction = function(tweet)
+
+
+    st.markdown(f"<br> Tweet: {tweet}", unsafe_allow_html=True)
+    st.markdown(f"Prediction: {prediction}", unsafe_allow_html=True)
+
 if __name__ == "__main__":
+
     data_tw = pd.read_csv('clean_data.csv')
 
     keywords = data_tw.loc[data_tw['keyword'] != 'None']
@@ -165,6 +252,7 @@ if __name__ == "__main__":
     text = [words.split(',') for words in keywords['text']]
     text = [y for x in text for y in x]
     SetHeader()
+
     title("WordCloud of a disaster tweets",40,'gray')
     l_col,center_col,r_col = st.columns([0.5,5,0.5])
     
@@ -192,9 +280,9 @@ if __name__ == "__main__":
     ShowBarGraph(wordDF,"Word","Most common words in keywords")
     # Grafica de pie
     salt()
-    title("Bert Classifier Model results",40,'gray')
+    title("Random Forest Classifier Model results",40,'gray')
     salt()
-    ShowBarGraph(testDF,"Test Data","Bert Classifier prediction using test data")
+    ShowBarGraph(testDF,"Test Data","Random Forest Classifier prediction using test data")
     
     # with center_col:
     ShowPieGraph(pieDF,"Model Success")
@@ -205,4 +293,13 @@ if __name__ == "__main__":
     ShowBarGraph(testDFnb,"Test Data","Naive Bayes prediction using test data")
     
     ShowPieGraph(pieDFnb,"Model Success")
+
+    @st.cache(persist=True,suppress_st_warning=True)
+    def makeClassifier():
+        return Classifier()
+
+    cs = makeClassifier()
+
+    modelInput(cs.BayesPredictCategory, 'Naive Bayes')
+    modelInput(cs.ForestPredictCategory, 'Random Forest')
     
