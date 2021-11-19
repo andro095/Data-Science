@@ -110,13 +110,13 @@ def CreateDataFrames():
     test_df_nb = pd.DataFrame(data=test_data_nb).sort_values(by="Frequency",ascending=False)
 
     # Datos modelo de prediccion Random classifier
-    pie_data = {'Case':['Succesful','Failed','No Answer'],
-                'Percentage':[61.7,32.3,6.0]}
+    pie_data = {'Case':['Succesful','Failed'],
+                'Percentage':[82.5,17.5]}
     pie_df = pd.DataFrame(data=pie_data).sort_values(by="Percentage",ascending=False)
 
     # Datos modelo de prediccion naive bayes
-    pie_data_nb = {'Case':['Succesful','Failed','No Answer'],
-                'Percentage':[63.1,30.7,6.2]}
+    pie_data_nb = {'Case':['Succesful','Failed'],
+                'Percentage':[80.0,20.0]}
     pie_df_nb = pd.DataFrame(data=pie_data_nb).sort_values(by="Percentage",ascending=False)
 
     # tweets de desastres
@@ -263,7 +263,7 @@ if __name__ == "__main__":
         @st.cache(persist=True,suppress_st_warning=True)
         def swc(df, l):
             return generate_word_cloud(df, l)
-        wc = swc(text, 200)
+        wc = swc(text, sl.value)
         fig = plt.figure(figsize=(8,8))
         plt.imshow(wc,interpolation="bilinear")
         plt.axis('off')
