@@ -213,7 +213,7 @@ def generate_word_cloud(arr, length):
     wc_mask = Image.open('images/fire.jpg')
     wc_mask = ImageOps.grayscale(wc_mask)
     wc_mask = np.array(wc_mask)
-    word_map = WordCloud(background_color='white',mask=wc_mask,).generate(" ".join(arr))
+    word_map = WordCloud(background_color='white',max_words=length,mask=wc_mask,).generate(" ".join(arr))
     return word_map
 
 def title(text,size,color):
